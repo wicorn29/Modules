@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Repositories</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 15px;
+        }
+        .repo-form {
+            padding: 20px;
+            background-color: white;
+            margin: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .repo-form input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .repo-form button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .repo-form button:hover {
+            background-color: #45a049;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Repo Manager</h1>
+    </header>
+    <div class="repo-form">
+        <h2>Install a Repository</h2>
+        <input type="text" id="repoUrl" placeholder="Enter GitHub Repo URL (e.g., https://github.com/wicorn29/Puzzler)">
+        <button onclick="installRepo()">Install Repo</button>
+        <p id="errorMessage" class="error"></p>
+    </div>
+
+    <script>
+        // Install a repository by fetching the repo.json
+        function installRepo() {
+            const repoUrl = document.getElementById('repoUrl').value;
+            const repoJsonUrl = repoUrl + '/repo.json';
+
+            fetch(repoJsonUrl)
+                .then(response => response.json())
+                .then(data => {
+                    let repos = JSON.parse(localStorage.getItem('repos')) || [];
+                    repos.push(data);
+                    localStorage.setItem('repos', JSON.stringify(repos));
+                    alert('Repository installed!');
+                    window.location.href = 'index.html';
+                })
+                .catch(error => {
+                    document.getElementById('errorMessage').textContent = 'Failed to fetch repo.json. Make sure the URL is correct.';
+                });
+        }
+    </script>
+</body>
+</html>
